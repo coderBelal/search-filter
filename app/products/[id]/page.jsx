@@ -1,7 +1,9 @@
  "use client";
 
+import NotFound from '@/app/notfound/page';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import { useState } from 'react'; // Import useState
 
 const products = [
     { id: 1, name: 'Shampoo', category: 'Hair', price: 10, description: 'For smooth and shiny hair. Enriched with natural oils and vitamins.', image: 'https://example.com/images/shampoo.jpg' },
@@ -14,16 +16,12 @@ const products = [
     { id: 8, name: 'Conditioner', category: 'Hair', price: 11, description: 'Deeply conditions and detangles hair. Fortified with vitamins and natural extracts.', image: 'https://example.com/images/conditioner.jpg' },
     { id: 9, name: 'Foot Cream', category: 'Skin', price: 10, description: 'Soothes and revitalizes tired feet. Contains peppermint and shea butter.', image: 'https://example.com/images/foot-cream.jpg' },
     { id: 10, name: 'Lip Balm', category: 'Skin', price: 7, description: 'Moisturizes and protects lips. Made with natural beeswax and essential oils.', image: 'https://example.com/images/lip-balm.jpg' },
- 
-  ];
-  
+];
 
 const ProductPage = () => {
   const { id } = useParams();
   const router = useRouter();
 
-  
- 
   if (!id) {
     return <p className="text-center text-red-500">No product selected!</p>;
   }
@@ -31,13 +29,19 @@ const ProductPage = () => {
   const product = products.find((p) => p.id === Number(id));
 
   if (!product) {
-    return <p className="text-center text-red-500">Product not found!</p>;
+    return <NotFound />;
   }
+
+  const handleAddToCart = () => {
+    // Here you would add the product to the cart. For now, we'll just log it.
+    console.log('Added to cart:', product);
+    router.push('/cart'); // Redirect to cart page
+  };
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
-      <button 
-        onClick={() => router.push('/')} 
+      <button
+        onClick={() => router.push('/products')}
         className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
         Back to Home
@@ -45,7 +49,13 @@ const ProductPage = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-4">{product.name}</h1>
       <p className="text-xl text-gray-600 mb-2">Category: <span className="font-semibold text-gray-800">{product.category}</span></p>
       <p className="text-xl text-gray-600 mb-2">Price: <span className="font-semibold text-gray-800">${product.price}</span></p>
-      <p className="text-gray-700">{product.description}</p>
+      <p className="text-gray-700 mb-4">{product.description}</p>
+      <button
+        onClick={handleAddToCart}
+        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+        Add to Cart
+      </button>
     </div>
   );
 };
